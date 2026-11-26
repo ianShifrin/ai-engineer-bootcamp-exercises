@@ -10,7 +10,7 @@ def create_client():
     """Connect to OpenRouter using the key saved in .env."""
     load_dotenv()
     return OpenAI(
-        base_url="https://openrouter.ai/api/v1",
+        base_url="https://generativelanguage.googleapis.com/v1beta/openai/",
         api_key=os.environ["OPENROUTER_API_KEY"],
     )
 
@@ -30,7 +30,8 @@ def build_system_prompt(settings):
 
 def build_messages(settings, history):
     """Put the system prompt in front of the conversation so far."""
-    system_message = {"role": "system", "content": build_system_prompt(settings)}
+    system_message = {"role": "system",
+                      "content": build_system_prompt(settings)}
     return [system_message] + history
 
 

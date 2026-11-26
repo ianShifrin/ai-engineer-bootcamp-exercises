@@ -23,8 +23,8 @@ ENV_FILE = ".env"
 
 # Used only when .env has no value yet. To change provider, change .env
 # (or run this file with --switch). Do not edit these two lines.
-DEFAULT_BASE_URL = "https://openrouter.ai/api/v1"
-DEFAULT_MODEL = "google/gemma-4-26b-a4b-it:floor"
+DEFAULT_BASE_URL = "https://generativelanguage.googleapis.com/v1beta/openai/"
+DEFAULT_MODEL = "gemini-3.5-flash-lite"
 
 
 def stop(message):
@@ -51,7 +51,8 @@ switching = "--switch" in sys.argv
 base_url = saved.get("LLM_BASE_URL") or DEFAULT_BASE_URL
 model = saved.get("LLM_MODEL") or DEFAULT_MODEL
 if switching:
-    print("Changing provider. Press Enter to keep the value shown in [brackets].")
+    print(
+        "Changing provider. Press Enter to keep the value shown in [brackets].")
     base_url = input(f"Base URL [{base_url}]: ").strip() or base_url
     model = input(f"Model [{model}]: ").strip() or model
 if not base_url.startswith("http"):
@@ -71,7 +72,8 @@ if not key and saved.get("OPENROUTER_API_KEY"):
     print("✅ Your saved key now has the name LLM_API_KEY in .env.")
 
 if switching and key:
-    print(f"Paste your key for {provider} and press Enter, or press Enter alone to keep the saved key.")
+    print(
+        f"Paste your key for {provider} and press Enter, or press Enter alone to keep the saved key.")
     print("(Nothing appears while you paste. That's normal.)")
     key = getpass("Key: ").strip() or key
     save_key(key)
@@ -101,13 +103,16 @@ client = openai.OpenAI(base_url=base_url, api_key=key)
 try:
     response = client.chat.completions.create(
         model=model,
-        messages=[{"role": "user", "content": "Reply with exactly one word: ready"}],
+        messages=[
+            {"role": "user", "content": "Reply with exactly one word: ready"}],
         max_tokens=50,
     )
 except openai.APIConnectionError:
-    stop(f"Couldn't reach {provider}. Check your internet connection and the LLM_BASE_URL line in .env, then run this again.")
+    stop(
+        f"Couldn't reach {provider}. Check your internet connection and the LLM_BASE_URL line in .env, then run this again.")
 except openai.APIStatusError as error:
-    stop(FIXES.get(error.status_code, f"{provider} returned an error. {SAME_PROVIDER}\n   {SWITCH}\n   If they already match, tell your instructor: {error}"))
+    stop(FIXES.get(error.status_code,
+         f"{provider} returned an error. {SAME_PROVIDER}\n   {SWITCH}\n   If they already match, tell your instructor: {error}"))
 
 reply = response.choices[0].message.content
 if not reply:
