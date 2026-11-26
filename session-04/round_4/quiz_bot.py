@@ -3,7 +3,7 @@
 Run it from the top folder of the repository:
     python session-04/round_4/quiz_bot.py
 """
-
+from time import sleep
 from practice_api import ask
 
 QUESTIONS = [
@@ -19,5 +19,6 @@ for question in QUESTIONS:
     try:
         answer = ask(question)
         print(f"A: {answer}")
-    except Exception:
-        print("Something went wrong.")
+        sleep(2)  # wait a second before asking the next question
+    except Exception as e:
+        print(f"Something went wrong: {e}")
